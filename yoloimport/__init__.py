@@ -41,7 +41,9 @@ class _PyPI_Finder:
         return name.lower()
 
     @classmethod
-    def find(cls, package):
+    def find(cls, package, use_cache=True):
+        if use_cache is False:
+            cls.resolved_packages.pop(package, None)
         if package not in cls.resolved_packages:
             cls._pip_resolve(package)
         project = cls.resolved_packages.get(package, None)
@@ -99,17 +101,13 @@ class _PyPI_Finder:
 
 class YOLOFinder(MetaPathFinder, Loader):
 
-    module_cache = {}
-
     def find_spec(self, fullname, path=None, target=None):
-        top = fullname.split(".")[0]
-        if top in self.module_cache:
-            cache_spec = self.module_cache[top]
-            new_spec = spec_from_loader(fullname, spec.loader, origin=spec.origin)
-            new_spec.submodule_search_locations = cache_spec.submodule_search_locations + '/' + fullname.split('.')[-1]
-            return new_spec
+        if path:
+            # not responsible for finding sub-modules
+            return None
         try:
-            project = _PyPI_Finder.find(fullname)
+            # for reload (target provided) re-search pypi
+            project = _PyPI_Finder.find(fullname, use_cache=(target is None))
             if project is None:
                 return None
             temp_source = _PyPI_Finder.download(project)
@@ -117,10 +115,8 @@ class YOLOFinder(MetaPathFinder, Loader):
                 return None
             spec = spec_from_loader(fullname, zipimporter(temp_source), origin=project)
             spec.submodule_search_locations = [temp_source+'/'+fullname]
-            self.module_cache[fullname] = spec
             return spec
         except Exception as e:
-            raise e
             return None
 
 

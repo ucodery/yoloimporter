@@ -1,5 +1,6 @@
 import sys
 import unittest
+from importlib import reload
 
 class TestPypiImport(unittest.TestCase):
     # NOTE: none of the test imports can be part of this package's requirements
@@ -71,6 +72,27 @@ class TestPypiImport(unittest.TestCase):
         import virtualenv
         self.assertIn("platformdirs", sys.modules)
         import platformdirs
+
+    def test_reload(self):
+        self.yolo()
+
+        import slicetime
+        original = slicetime.__doc__
+        slicetime.__doc__ = "Just a test"
+
+        reload(slicetime)
+        self.assertEqual(slicetime.__doc__, original)
+
+    def test_non_normalized_package(self):
+        """pypi.org namespace is normalized (including case-insensitive)
+        while interpreter module cache is non-normalized (case-sensitive).
+        Don't locate pypi packages that match a normalized version of the
+        package, as then the same package could exist multiple times at once
+        """
+        self.yolo()
+
+        with self.assertRaises(ImportError):
+            import Q
 
 
 
