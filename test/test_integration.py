@@ -12,6 +12,8 @@ class TestPypiImport(unittest.TestCase):
         cls.startup_meta_path = sys.meta_path.copy()
         import yoloimport  # noqa: F401
 
+        cls.yoloimport = yoloimport
+
         cls.yolo_meta_path = sys.meta_path.copy()
 
     @classmethod
@@ -100,6 +102,31 @@ class TestPypiImport(unittest.TestCase):
 
         with self.assertRaises(ImportError):
             import Q  # noqa: F401
+
+    def test_include(self):
+        # package name: yaml
+        # project name: PyYAML
+        # NOTE: there is no PyPI package named yaml
+        with self.assertRaises(ImportError):
+            import yaml
+
+        self.yolo()
+        self.yoloimport.include('PyYAML')
+        import yaml  # noqa: F401, F811
+
+    def test_multi_module(self):
+        # package name: setuptools
+        # package name: _distutils_hack
+        # project name: setuptools
+        # NOTE: there is no PyPI package named _distutils_hack
+        with self.assertRaises(ImportError):
+            import setuptools
+        with self.assertRaises(ImportError):
+            import _distutils_hack
+
+        self.yolo()
+        import setuptools  # noqa: F401, F811
+        import _distutils_hack  # noqa: F401, F811
 
 
 if __name__ == '__main__':
