@@ -19,5 +19,13 @@ path = "yoloimport/__init__.py"
 
 [tool.hatch.envs.test.scripts]
 integration = "python -m unittest test/test_integration.py"
-t = "python -m unittest test.test_integration.TestPypiImport.test_package test.test_integration.TestPypiImport.test_module test.test_integration.TestPypiImport.test_deep_package"
 
+[tool.hatch.envs.lint]
+dependencies = ["ruff"]
+
+[tool.hatch.envs.lint.scripts]
+ruff-check = "ruff check ."
+ruff-format = "ruff format ."
+
+[tool.ruff.format]
+quote-style = "single"

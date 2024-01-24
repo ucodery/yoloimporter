@@ -2,6 +2,7 @@ import sys
 import unittest
 from importlib import reload
 
+
 class TestPypiImport(unittest.TestCase):
     # NOTE: none of the test imports can be part of this package's requirements
     # (including transitive and test)
@@ -9,7 +10,8 @@ class TestPypiImport(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.startup_meta_path = sys.meta_path.copy()
-        import yoloimport
+        import yoloimport  # noqa: F401
+
         cls.yolo_meta_path = sys.meta_path.copy()
 
     @classmethod
@@ -28,7 +30,8 @@ class TestPypiImport(unittest.TestCase):
             import q
 
         self.yolo()
-        import q
+        import q  # noqa: F811
+
         q.q
 
     def test_package(self):
@@ -40,8 +43,9 @@ class TestPypiImport(unittest.TestCase):
             import more_itertools
 
         self.yolo()
-        import more_itertools
-        self.assertTrue(hasattr(more_itertools, "more"))
+        import more_itertools  # noqa: F811
+
+        self.assertTrue(hasattr(more_itertools, 'more'))
         self.assertIsInstance(more_itertools.more, type(more_itertools))
 
     def test_deep_package(self):
@@ -53,9 +57,10 @@ class TestPypiImport(unittest.TestCase):
             import pygments
 
         self.yolo()
-        import pygments
+        import pygments  # noqa: F811
         import pygments.styles
         import pygments.styles.default
+
         self.assertIsInstance(pygments.styles, type(pygments))
         self.assertIsInstance(pygments.styles.default, type(pygments))
 
@@ -69,16 +74,18 @@ class TestPypiImport(unittest.TestCase):
             import platformdirs
 
         self.yolo()
-        import virtualenv
-        self.assertIn("platformdirs", sys.modules)
-        import platformdirs
+        import virtualenv  # noqa: F401, F811
+
+        self.assertIn('platformdirs', sys.modules)
+        import platformdirs  # noqa: F401, F811
 
     def test_reload(self):
         self.yolo()
 
         import slicetime
+
         original = slicetime.__doc__
-        slicetime.__doc__ = "Just a test"
+        slicetime.__doc__ = 'Just a test'
 
         reload(slicetime)
         self.assertEqual(slicetime.__doc__, original)
@@ -92,9 +99,8 @@ class TestPypiImport(unittest.TestCase):
         self.yolo()
 
         with self.assertRaises(ImportError):
-            import Q
+            import Q  # noqa: F401
 
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()
