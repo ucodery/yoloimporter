@@ -196,6 +196,3 @@ class YOLOFinder(MetaPathFinder, Loader):
             return spec
         except Exception:
             return None
-
-
-sys.meta_path.append(YOLOFinder())

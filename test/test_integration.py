@@ -2,6 +2,8 @@ import sys
 import unittest
 from importlib import reload
 
+import yoloimport
+
 
 class TestPypiImport(unittest.TestCase):
     # NOTE: none of the test imports can be part of this package's requirements
@@ -10,9 +12,7 @@ class TestPypiImport(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.startup_meta_path = sys.meta_path.copy()
-        import yoloimport  # noqa: F401
-
-        cls.yoloimport = yoloimport
+        import yoloimport.doit  # noqa: F401
 
         cls.yolo_meta_path = sys.meta_path.copy()
 
@@ -22,6 +22,12 @@ class TestPypiImport(unittest.TestCase):
 
     def setUp(self):
         sys.meta_path = self.startup_meta_path.copy()
+
+    def test_doit(self):
+        # this test setup was already done in setUpClass
+        mp1 = sys.meta_path.copy()
+        self.yolo()
+        self.assertNotEqual(mp1, sys.meta_path)
 
     def test_module(self):
         """Test importing a single-module project"""
@@ -111,7 +117,7 @@ class TestPypiImport(unittest.TestCase):
             import yaml
 
         self.yolo()
-        self.yoloimport.include('PyYAML')
+        yoloimport.include('PyYAML')
         import yaml  # noqa: F401, F811
 
     def test_multi_module(self):
