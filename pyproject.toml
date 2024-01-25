@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "yoloimport"
+name = "yoloimporter"
 description = "import directly from PyPI"
 authors = [{name = "Jeremiah Paige", email = "ucodery@gmail.com"}]
 license = {file = "LICENSE.txt"}
@@ -13,10 +13,10 @@ dynamic = ["version"]
 dependencies = ["pip"]
 
 [project.urls]
-Home = "https://github.com/ucodery/yoloimport"
+Home = "https://github.com/ucodery/yoloimporter"
 
 [tool.hatch.version]
-path = "yoloimport/__init__.py"
+path = "yoloimporter/__init__.py"
 
 [tool.hatch.envs.test.scripts]
 integration = "python -m unittest test/test_integration.py"

@@ -2,7 +2,7 @@ import sys
 import unittest
 from importlib import reload
 
-import yoloimport
+import yoloimporter
 
 
 class TestPypiImport(unittest.TestCase):
@@ -12,7 +12,7 @@ class TestPypiImport(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.startup_meta_path = sys.meta_path.copy()
-        import yoloimport.doit  # noqa: F401
+        import yoloimporter.doit  # noqa: F401
 
         cls.yolo_meta_path = sys.meta_path.copy()
 
@@ -117,7 +117,7 @@ class TestPypiImport(unittest.TestCase):
             import yaml
 
         self.yolo()
-        yoloimport.include('PyYAML')
+        yoloimporter.include('PyYAML')
         import yaml  # noqa: F401, F811
 
     def test_multi_module(self):
