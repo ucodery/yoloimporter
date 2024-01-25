@@ -11,7 +11,7 @@ from tempfile import NamedTemporaryFile
 from zipimport import zipimporter
 from zipfile import ZipFile
 
-__version__ = '0.0'
+__version__ = '0.1'
 
 # TODO: strategies
 # in-memory whl - disappear after exit
@@ -174,10 +174,11 @@ def include(project):
 
     After pre-fetching with this function, the actual package can be imported as usual
     """
+    pre_cache = _PyPI_Finder.resolved_packages.copy()
     try:
-        _PyPI_Finder.find(project)
+        _PyPI_Finder._pip_resolve(project)
         return True
-    except (ResolveError, KeyError):
+    except ResolveError:
         return False
 
 

@@ -7,12 +7,13 @@ name = "yoloimport"
 description = "import directly from PyPI"
 authors = [{name = "Jeremiah Paige", email = "ucodery@gmail.com"}]
 license = {file = "LICENSE.txt"}
+readme = {file = "README.md", content-type = "text/markdown"}
 classifiers = ["License :: OSI Approved :: BSD License"]
 dynamic = ["version"]
 dependencies = ["pip"]
 
 [project.urls]
-Home = "https://github.com/ucodery/yolo_import"
+Home = "https://github.com/ucodery/yoloimport"
 
 [tool.hatch.version]
 path = "yoloimport/__init__.py"
