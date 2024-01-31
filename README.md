@@ -34,3 +34,18 @@ Try installing the latest version from pypi.org
 ```bash
 python -m pip install yoloimporter
 ```
+
+## Advanced Usage
+
+Sometimes packages will publish with a different name than they provide for import.
+This makes it just about impossible at import time to backwards-resolve the project
+name. For these cases, YOLO Importer will still work, but must be told the project
+name in advance.
+
+```python
+import yoloimporter.doit
+
+yoloimporter.include("PyYAML")
+# import pyyaml would be an ImportError, even if it was really installed
+import yaml
+```
